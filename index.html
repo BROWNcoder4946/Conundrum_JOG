@@ -618,23 +618,44 @@
             }
         }
 
-        function playBeep() {
-            initAudio();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.3);
-        }
+      function playTierBeep(points) {
+    initAudio();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    // Different starting frequencies per tier
+    let startFreq;
+    switch (points) {
+        case 100:
+            startFreq = 600;   // softer
+            break;
+        case 250:
+            startFreq = 750;
+            break;
+        case 500:
+            startFreq = 900;
+            break;
+        case 1000:
+            startFreq = 1100;  // more intense
+            break;
+        default:
+            startFreq = 800;
+    }
+
+    oscillator.frequency.setValueAtTime(startFreq, audioContext.currentTime);
+    oscillator.frequency.linearRampToValueAtTime(startFreq * 0.6, audioContext.currentTime + 0.25);
+
+    oscillator.type = 'sawtooth'; // harsher, more Stranger Things
+
+    gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+}
 
         // Normalize track name for storage key
         function normalizeTrackName(trackName) {
