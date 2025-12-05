@@ -501,9 +501,17 @@
             <p>Interactive Event Counter System</p>
         </section>
 
-        <div class="reset-container fade-in">
+       <div class="reset-container fade-in">
             <button class="reset-btn" id="resetBtn" aria-label="Reset all counters to initial values">
                 RESET ROUND
+            </button>
+        </div>
+
+        <!-- BGM CONTROL BUTTON -->
+        <div class="reset-container fade-in">
+            <button class="reset-btn" id="bgmToggle" aria-label="Toggle background music"
+                style="padding: 8px 20px; font-size: 0.9rem;">
+                PLAY THE UPSIDE DOWN
             </button>
         </div>
 
@@ -535,12 +543,19 @@
             </div>
         </div>
 
-        <footer class="footer">
+                <footer class="footer">
             <p>Event designed in the spirit of Hawkins · Click box to decrement · Use + to correct mistakes</p>
         </footer>
     </div>
 
+    <!-- BACKGROUND MUSIC AUDIO ELEMENT -->
+    <audio id="bgmAudio" loop>
+        <source src="assets/the_upside_down.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
+        // your existing JS here...
+
         // ═══════════════════════════════════════════════════════════════════════════════
         // EDIT INITIAL VALUES HERE BEFORE DEPLOYMENT
         // ═══════════════════════════════════════════════════════════════════════════════
@@ -866,7 +881,7 @@
         });
     }
 
-    // Initialize
+        // Initialize
     document.addEventListener('DOMContentLoaded', () => {
         initializeMatrix();
         
@@ -884,6 +899,31 @@
         });
         
         document.getElementById('resetBtn').addEventListener('click', resetAllCounters);
+
+        // ═══════════════════════════════════════════════
+        // BGM CONTROL LOGIC
+        // ═══════════════════════════════════════════════
+        const bgmAudio = document.getElementById('bgmAudio');
+        const bgmToggle = document.getElementById('bgmToggle');
+        let bgmPlaying = false;
+
+        if (bgmAudio && bgmToggle) {
+            bgmToggle.addEventListener('click', async () => {
+                try {
+                    if (!bgmPlaying) {
+                        await bgmAudio.play();
+                        bgmPlaying = true;
+                        bgmToggle.textContent = 'PAUSE THE UPSIDE DOWN';
+                    } else {
+                        bgmAudio.pause();
+                        bgmPlaying = false;
+                        bgmToggle.textContent = 'PLAY THE UPSIDE DOWN';
+                    }
+                } catch (err) {
+                    console.log('Audio play was blocked by the browser', err);
+                }
+            });
+        }
     });
 
 
