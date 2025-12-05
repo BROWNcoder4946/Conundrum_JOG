@@ -193,40 +193,47 @@
             background: #8b0000;
         }
 
-        .matrix-header {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background: #1a0000;
-            color: #ff4444;
-            padding: 15px 10px;
-            text-align: center;
-            font-family: 'Cinzel', serif;
-            font-size: clamp(0.8rem, 1.5vw, 1rem);
-            font-weight: 700;
-            text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-        }
+      .matrix-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #1a0000;
+    color: #ff4444;
+    padding: 20px 10px;
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
 
-        .matrix-label {
-            background: rgba(30, 0, 0, 0.9);
-            color: #ff6666;
-            padding: 15px 10px;
-            text-align: center;
-            font-family: 'Cinzel', serif;
-            font-weight: 600;
-            font-size: clamp(0.8rem, 1.4vw, 0.95rem);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.4;
-        }
+    /* BIGGER FONT FOR "POINTS" / "TIME" / TRACK NAMES */
+    font-size: clamp(1.6rem, 3.4vw, 2.4rem);
 
-        .multiplier {
-            color: #4caf50;
-            font-size: 0.85em;
-            margin-top: 4px;
-        }
+    text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+}
+
+.matrix-label {
+    background: rgba(30, 0, 0, 0.9);
+    color: #ff6666;
+    padding: 25px 10px;
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+
+    /* BIGGER FONT FOR 100 PTS, 250 PTS, ETC */
+    font-size: clamp(1.8rem, 3vw, 2.2rem);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.4;
+}
+
+.multiplier {
+    color: #4caf50;
+    font-size: 0.8em;   /* keeps ×1.25 slightly smaller than the main number */
+    margin-top: 4px;
+}
+
 
         .counter-cell {
             background: rgba(40, 40, 40, 0.8);
