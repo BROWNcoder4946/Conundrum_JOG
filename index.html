@@ -618,20 +618,41 @@
             }
         }
 
-    function playBeep() {
+   function playTierBeep(points) {
     initAudio();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    
+
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    
-    oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
-    
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+
+    // Different starting frequencies per tier
+    let startFreq;
+    switch (points) {
+        case 100:
+            startFreq = 600;   // softer
+            break;
+        case 250:
+            startFreq = 750;
+            break;
+        case 500:
+            startFreq = 900;
+            break;
+        case 1000:
+            startFreq = 1100;  // more intense
+            break;
+        default:
+            startFreq = 800;
+    }
+
+    oscillator.frequency.setValueAtTime(startFreq, audioContext.currentTime);
+    oscillator.frequency.linearRampToValueAtTime(startFreq * 0.6, audioContext.currentTime + 0.25);
+
+    oscillator.type = 'sawtooth'; // harsher, more Stranger Things
+
+    gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-    
+
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.3);
 }
@@ -709,7 +730,26 @@
             }
             
             // Show overlay
-            showOverlay(points, track, newValue);
+            showOverlay(points, track, newValue)
+                 {
+    const overlay = document.getElementById('overlay');
+    const rowIndex = POINTS_TIERS.indexOf(points);
+    const time = TIME_TIERS[rowIndex];
+    const multiplier = MULTIPLIERS[rowIndex];
+    
+    document.getElementById('overlayTrack').textContent = track;
+    document.getElementById('overlayDetails').textContent = `${track} play triggered!`;
+    document.getElementById('overlayPoints').innerHTML = 
+        `${points} pts <span class="overlay-multiplier">× ${multiplier}</span> · ${time}s`;
+    document.getElementById('overlayRemaining').textContent = remaining;
+    
+    overlay.classList.add('active');
+     // Trigger tier specific sound
+    playTierBeep(points);
+
+    // Optional global pulse
+    document.body.classList.add('pulse');
+    setTimeout(() => document.body.classList.remove('pulse'), 1000);
             
             setTimeout(() => {
                 activeDecrements.delete(cellId);
