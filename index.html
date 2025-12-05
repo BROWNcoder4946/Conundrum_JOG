@@ -24,15 +24,36 @@
         3. Edit the numeric values for each key (default: 10)
         4. Keys use format: "POINTS_TrackName" (e.g., "100_DemogorgonArena")
         
+        POINTS AND MULTIPLIERS:
+        - 100 pts × 1.25
+        - 250 pts × 1.5
+        - 500 pts × 1.75
+        - 1000 pts × 2
+        Multipliers shown in green throughout the interface.
+        
         PERSISTENCE:
         - Uses localStorage with keys: "vasel_counter_POINTS_TrackName"
         - Example: "vasel_counter_100_DemogorgonArena"
         - Values persist across page reloads and browser restarts
         
         HOW TO RESET COUNTERS:
-        Option A: Edit initialCounters values in code and clear localStorage
+        Option A: Click the "RESET ROUND" button (prompts for confirmation)
+                  This resets all counters to initial values from initialCounters
         Option B: Open browser DevTools → Application/Storage → Local Storage → 
                   Delete keys starting with "vasel_counter_" → Reload page
+        Option C: Edit initialCounters values in code and clear localStorage
+        
+        COUNTER OPERATIONS:
+        - Click main box area: Decrements counter by 1 (if > 0), shows overlay
+        - Click "+" button: Increments counter by 1 (up to initial value), no overlay
+        - When counter reaches 0: Box darkens and disables main click area
+        - "+" button always works to correct mistakes and re-enable boxes
+        
+        OVERLAY:
+        After each decrement, a full-screen overlay appears showing:
+        - Track name, Points + Multiplier, Time, Remaining count
+        - Plays a beep sound effect
+        - Close with button or ESC key
         
         SUPPORTED BROWSERS:
         Modern browsers with localStorage support (Chrome 4+, Firefox 3.5+, Safari 4+, Edge)
@@ -40,6 +61,7 @@
         STRUCTURE:
         - 4 Points Tiers: 100, 250, 500, 1000
         - 4 Time Tiers: 20s, 40s, 60s, 80s (respectively)
+        - 4 Multipliers: ×1.25, ×1.5, ×1.75, ×2 (respectively)
         - 5 Tracks: Demogorgon Arena, Hawkins Lab Archives, The Upside Vault, 
                     The Vision Zone, CREEL HOUSE CIRCUIT
         
@@ -85,7 +107,7 @@
 
         .hero {
             text-align: center;
-            padding: 60px 20px 40px;
+            padding: 50px 20px 30px;
             background: linear-gradient(180deg, rgba(139, 0, 0, 0.15) 0%, transparent 100%);
         }
 
@@ -110,53 +132,40 @@
             letter-spacing: 2px;
         }
 
-        .tracks-intro {
-            max-width: 1400px;
-            margin: 40px auto;
+        .reset-container {
+            text-align: center;
+            margin: 30px auto;
             padding: 0 20px;
         }
 
-        .tracks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .track-intro-card {
-            background: rgba(20, 0, 0, 0.6);
-            border: 2px solid #8b0000;
-            border-radius: 6px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .track-intro-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
-            border-color: #ff0000;
-        }
-
-        .track-intro-card .icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .track-intro-card h3 {
+        .reset-btn {
             font-family: 'Cinzel', serif;
+            background: rgba(139, 0, 0, 0.4);
             color: #ff4444;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
+            border: 2px solid #8b0000;
+            padding: 12px 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            letter-spacing: 2px;
         }
 
-        .track-intro-card p {
-            color: #aaa;
-            font-size: 0.85rem;
+        .reset-btn:hover {
+            background: rgba(139, 0, 0, 0.6);
+            border-color: #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .reset-btn:active {
+            transform: translateY(0);
         }
 
         .matrix-section {
             max-width: 1600px;
-            margin: 50px auto 80px;
+            margin: 40px auto 80px;
             padding: 0 20px;
         }
 
@@ -179,7 +188,7 @@
 
         .matrix-grid {
             display: grid;
-            grid-template-columns: 100px 80px repeat(5, 1fr);
+            grid-template-columns: 120px 80px repeat(5, 1fr);
             min-width: 1100px;
             gap: 1px;
             background: #8b0000;
@@ -206,24 +215,32 @@
             text-align: center;
             font-family: 'Cinzel', serif;
             font-weight: 600;
-            font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+            font-size: clamp(0.8rem, 1.4vw, 0.95rem);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            line-height: 1.4;
+        }
+
+        .multiplier {
+            color: #4caf50;
+            font-size: 0.85em;
+            margin-top: 4px;
         }
 
         .counter-cell {
             background: rgba(40, 40, 40, 0.8);
             border: none;
-            padding: 20px 10px;
+            padding: 20px 10px 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             position: relative;
-            min-height: 140px;
+            min-height: 160px;
         }
 
         .counter-cell:hover:not(.disabled) {
@@ -237,8 +254,8 @@
             outline-offset: -2px;
         }
 
-        .counter-cell:active:not(.disabled) {
-            transform: scale(0.98);
+        .counter-cell:active:not(.disabled) .counter-main {
+            transform: scale(0.95);
         }
 
         .counter-cell.disabled {
@@ -256,12 +273,28 @@
             opacity: 0.6;
         }
 
+        .counter-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            transition: transform 0.1s ease;
+        }
+
         .counter-track-name {
-            font-size: clamp(0.75rem, 1.3vw, 0.9rem);
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
             color: #ff8888;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-align: center;
             font-weight: 600;
+        }
+
+        .counter-points {
+            font-size: clamp(0.65rem, 1.1vw, 0.75rem);
+            color: #ff6666;
+            margin-bottom: 8px;
         }
 
         .counter-value {
@@ -271,17 +304,141 @@
             font-weight: 700;
             text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
             margin: 5px 0;
-            transition: all 0.2s ease;
-        }
-
-        .counter-cell:not(.disabled):active .counter-value {
-            transform: scale(0.9);
         }
 
         .counter-remaining {
-            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            font-size: clamp(0.65rem, 1.1vw, 0.75rem);
             color: #999;
             margin-top: 5px;
+        }
+
+        .plus-btn {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .plus-btn:hover {
+            background: rgba(76, 175, 80, 0.4);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+            transform: scale(1.1);
+        }
+
+        .plus-btn:active {
+            transform: scale(0.95);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: overlayFadeIn 0.3s ease;
+        }
+
+        .overlay.active {
+            display: flex;
+        }
+
+        @keyframes overlayFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .overlay-content {
+            background: linear-gradient(135deg, #1a0000 0%, #0c0c0c 100%);
+            border: 3px solid #ff0000;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+            animation: overlayScale 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+        }
+
+        @keyframes overlayScale {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .overlay-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(139, 0, 0, 0.4);
+            border: 2px solid #8b0000;
+            color: #ff4444;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay-close:hover {
+            background: rgba(139, 0, 0, 0.6);
+            border-color: #ff0000;
+            transform: rotate(90deg);
+        }
+
+        .overlay-track {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+        }
+
+        .overlay-details {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .overlay-points {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            color: #ff6666;
+            margin-bottom: 10px;
+        }
+
+        .overlay-multiplier {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .overlay-remaining {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: #ff0000;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+            margin: 20px 0;
+        }
+
+        .overlay-label {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: #999;
         }
 
         .sr-only {
@@ -307,15 +464,11 @@
 
         @media (max-width: 768px) {
             .hero {
-                padding: 40px 15px 30px;
-            }
-
-            .tracks-grid {
-                grid-template-columns: 1fr;
+                padding: 40px 15px 25px;
             }
 
             .matrix-section {
-                margin: 40px auto 60px;
+                margin: 30px auto 60px;
             }
 
             .matrix-container {
@@ -323,8 +476,12 @@
             }
 
             .counter-cell {
-                min-height: 120px;
-                padding: 15px 8px;
+                min-height: 140px;
+                padding: 15px 8px 8px;
+            }
+
+            .overlay-content {
+                padding: 30px 20px;
             }
         }
 
@@ -345,41 +502,16 @@
             <p>Interactive Event Counter System</p>
         </section>
 
-        <section class="tracks-intro fade-in">
-            <div class="tracks-grid">
-                <div class="track-intro-card">
-                    <div class="icon">👾</div>
-                    <h3>Demogorgon Arena</h3>
-                    <p>Action Arena</p>
-                </div>
-                <div class="track-intro-card">
-                    <div class="icon">📚</div>
-                    <h3>Hawkins Lab Archives</h3>
-                    <p>Knowledge Hub</p>
-                </div>
-                <div class="track-intro-card">
-                    <div class="icon">🔮</div>
-                    <h3>The Upside Vault</h3>
-                    <p>Mystery Games</p>
-                </div>
-                <div class="track-intro-card">
-                    <div class="icon">👁️</div>
-                    <h3>The Vision Zone</h3>
-                    <p>Guess & Go</p>
-                </div>
-                <div class="track-intro-card">
-                    <div class="icon">🏚️</div>
-                    <h3>CREEL HOUSE CIRCUIT</h3>
-                    <p>Dark Mysteries</p>
-                </div>
-            </div>
-        </section>
+        <div class="reset-container fade-in">
+            <button class="reset-btn" id="resetBtn" aria-label="Reset all counters to initial values">
+                RESET ROUND
+            </button>
+        </div>
 
         <section class="matrix-section fade-in">
             <h2>Live Counter Matrix</h2>
             <div class="matrix-container">
                 <div class="matrix-grid" id="matrixGrid">
-                    <!-- Headers -->
                     <div class="matrix-header">POINTS</div>
                     <div class="matrix-header">TIME</div>
                     <div class="matrix-header">Demogorgon Arena</div>
@@ -387,15 +519,25 @@
                     <div class="matrix-header">The Upside Vault</div>
                     <div class="matrix-header">The Vision Zone</div>
                     <div class="matrix-header">CREEL HOUSE CIRCUIT</div>
-                    <!-- Grid will be populated by JS -->
                 </div>
             </div>
         </section>
 
         <div aria-live="polite" aria-atomic="true" class="sr-only" id="announcer"></div>
 
+        <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlayTrack">
+            <div class="overlay-content">
+                <button class="overlay-close" id="overlayClose" aria-label="Close overlay">×</button>
+                <div class="overlay-track" id="overlayTrack"></div>
+                <div class="overlay-details" id="overlayDetails"></div>
+                <div class="overlay-points" id="overlayPoints"></div>
+                <div class="overlay-remaining" id="overlayRemaining"></div>
+                <div class="overlay-label">remaining</div>
+            </div>
+        </div>
+
         <footer class="footer">
-            <p>Event designed in the spirit of Hawkins · Click any counter to decrement</p>
+            <p>Event designed in the spirit of Hawkins · Click box to decrement · Use + to correct mistakes</p>
         </footer>
     </div>
 
@@ -409,28 +551,28 @@
         // ═══════════════════════════════════════════════════════════════════════════════
 
         const initialCounters = {
-            // 100 Points / 20 Seconds Row
+            // 100 Points / 20 Seconds / ×1.25 Row
             "100_DemogorgonArena": 10,
             "100_HawkinsLabArchives": 10,
             "100_TheUpsideVault": 10,
             "100_TheVisionZone": 10,
             "100_CREELHOUSECIRCUIT": 10,
             
-            // 250 Points / 40 Seconds Row
+            // 250 Points / 40 Seconds / ×1.5 Row
             "250_DemogorgonArena": 10,
             "250_HawkinsLabArchives": 10,
             "250_TheUpsideVault": 10,
             "250_TheVisionZone": 10,
             "250_CREELHOUSECIRCUIT": 10,
             
-            // 500 Points / 60 Seconds Row
+            // 500 Points / 60 Seconds / ×1.75 Row
             "500_DemogorgonArena": 10,
             "500_HawkinsLabArchives": 10,
             "500_TheUpsideVault": 10,
             "500_TheVisionZone": 10,
             "500_CREELHOUSECIRCUIT": 10,
             
-            // 1000 Points / 80 Seconds Row
+            // 1000 Points / 80 Seconds / ×2 Row
             "1000_DemogorgonArena": 10,
             "1000_HawkinsLabArchives": 10,
             "1000_TheUpsideVault": 10,
@@ -444,6 +586,7 @@
 
         const POINTS_TIERS = [100, 250, 500, 1000];
         const TIME_TIERS = [20, 40, 60, 80];
+        const MULTIPLIERS = [1.25, 1.5, 1.75, 2];
         const TRACKS = [
             "Demogorgon Arena",
             "Hawkins Lab Archives",
@@ -452,12 +595,39 @@
             "CREEL HOUSE CIRCUIT"
         ];
 
-        // Normalize track name for storage key (remove spaces and special chars)
+        // Audio context for beep sound
+        let audioContext;
+        
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playBeep() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        // Normalize track name for storage key
         function normalizeTrackName(trackName) {
             return trackName.replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '');
         }
 
-        // Generate localStorage key for a specific counter
+        // Generate localStorage key
         function getCounterKey(points, track) {
             return `vasel_counter_${points}_${normalizeTrackName(track)}`;
         }
@@ -479,14 +649,19 @@
             localStorage.setItem(key, value.toString());
         }
 
-        // Debounce mechanism to prevent double-clicks
+        // Get initial value for a counter
+        function getInitialValue(points, track) {
+            const configKey = `${points}_${normalizeTrackName(track)}`;
+            return initialCounters[configKey] || 10;
+        }
+
+        // Debounce mechanism
         const activeDecrements = new Set();
 
-        // Decrement counter for specific cell
+        // Decrement counter
         function decrementCounter(points, track, button) {
             const cellId = `${points}_${normalizeTrackName(track)}`;
             
-            // Prevent concurrent decrements on same cell
             if (activeDecrements.has(cellId)) {
                 return;
             }
@@ -507,38 +682,107 @@
             const valueElement = button.querySelector('.counter-value');
             valueElement.textContent = newValue;
             
-            // Update aria-label
             button.setAttribute('aria-label', 
-                `${track} — ${points} points — ${newValue} remaining`);
+                `${track} — ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]} — ${newValue} remaining`);
             
-            // Announce to screen readers
             const announcer = document.getElementById('announcer');
-            announcer.textContent = `${track} ${points} points: ${newValue} remaining`;
+            announcer.textContent = `${track}, ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
             
-            // If reached 0, disable the button
             if (newValue === 0) {
                 button.classList.add('disabled');
                 button.setAttribute('aria-disabled', 'true');
-                button.style.transition = 'all 0.5s ease';
             }
             
-            // Release lock after brief delay
+            // Show overlay
+            showOverlay(points, track, newValue);
+            
             setTimeout(() => {
                 activeDecrements.delete(cellId);
             }, 200);
         }
 
-        // Initialize matrix grid
+        // Increment counter (+ button)
+        function incrementCounter(points, track, button) {
+            const currentValue = readValue(points, track);
+            const maxValue = getInitialValue(points, track);
+            
+            if (currentValue >= maxValue) {
+                return;
+            }
+            
+            const newValue = currentValue + 1;
+            saveValue(points, track, newValue);
+            
+            const valueElement = button.querySelector('.counter-value');
+            valueElement.textContent = newValue;
+            
+            button.setAttribute('aria-label', 
+                `${track} — ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]} — ${newValue} remaining`);
+            
+            const announcer = document.getElementById('announcer');
+            announcer.textContent = `${track}, ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
+            
+            if (newValue > 0) {
+                button.classList.remove('disabled');
+                button.setAttribute('aria-disabled', 'false');
+            }
+        }
+
+        // Show overlay
+        function showOverlay(points, track, remaining) {
+            const overlay = document.getElementById('overlay');
+            const rowIndex = POINTS_TIERS.indexOf(points);
+            const time = TIME_TIERS[rowIndex];
+            const multiplier = MULTIPLIERS[rowIndex];
+            
+            document.getElementById('overlayTrack').textContent = track;
+            document.getElementById('overlayDetails').textContent = `${track} play triggered!`;
+            document.getElementById('overlayPoints').innerHTML = 
+                `${points} pts <span class="overlay-multiplier">× ${multiplier}</span> · ${time}s`;
+            document.getElementById('overlayRemaining').textContent = remaining;
+            
+            overlay.classList.add('active');
+            playBeep();
+            
+            // Focus trap
+            const closeBtn = document.getElementById('overlayClose');
+            closeBtn.focus();
+        }
+
+        // Hide overlay
+        function hideOverlay() {
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        // Reset all counters
+        function resetAllCounters() {
+            if (!confirm('Reset all counters to initial values? This will start a new round.')) {
+                return;
+            }
+            
+            POINTS_TIERS.forEach(points => {
+                TRACKS.forEach(track => {
+                    const initialValue = getInitialValue(points, track);
+                    saveValue(points, track, initialValue);
+                });
+            });
+            
+            // Reload page to refresh all UI
+            location.reload();
+        }
+
+        // Initialize matrix
         function initializeMatrix() {
             const grid = document.getElementById('matrixGrid');
             
             POINTS_TIERS.forEach((points, rowIndex) => {
                 const time = TIME_TIERS[rowIndex];
+                const multiplier = MULTIPLIERS[rowIndex];
                 
                 // Points label
                 const pointsLabel = document.createElement('div');
                 pointsLabel.className = 'matrix-label';
-                pointsLabel.textContent = points;
+                pointsLabel.innerHTML = `${points} pts<div class="multiplier">× ${multiplier}</div>`;
                 grid.appendChild(pointsLabel);
                 
                 // Time label
@@ -547,61 +791,99 @@
                 timeLabel.textContent = `${time}s`;
                 grid.appendChild(timeLabel);
                 
-                // Counter cells for each track
+                // Counter cells
                 TRACKS.forEach(track => {
                     const currentValue = readValue(points, track);
                     
-                    const button = document.createElement('button');
-                    button.className = 'counter-cell';
+                    const cell = document.createElement('div');
+                    cell.className = 'counter-cell';
+                    cell.setAttribute('role', 'button');
+                    cell.setAttribute('tabindex', '0');
+                    
                     if (currentValue === 0) {
-                        button.classList.add('disabled');
-                        button.setAttribute('aria-disabled', 'true');
+                        cell.classList.add('disabled');
+                        cell.setAttribute('aria-disabled', 'true');
                     }
-                    button.setAttribute('aria-label', 
-                        `${track} — ${points} points — ${currentValue} remaining`);
-                    
-                    const trackName = document.createElement('div');
-                    trackName.className = 'counter-track-name';
-                    trackName.textContent = track;
-                    
-                    const value = document.createElement('div');
-                    value.className = 'counter-value';
-                    value.textContent = currentValue;
-                    
-                    const remaining = document.createElement('div');
-                    remaining.className = 'counter-remaining';
-                    remaining.textContent = 'remaining';
-                    
-                    button.appendChild(trackName);
-                    button.appendChild(value);
-                    button.appendChild(remaining);
-                    
-                    // Click handler
-                    button.addEventListener('click', (e) => {
-                        if (!button.classList.contains('disabled')) {
-                            decrementCounter(points, track, button);
-                        }
-                    });
-                    
-                    // Keyboard handler
-                    button.addEventListener('keydown', (e) => {
-                        if ((e.key === 'Enter' || e.key === ' ') && 
-                            !button.classList.contains('disabled')) {
-                            e.preventDefault();
-                            decrementCounter(points, track, button);
-                        }
-                    });
-                    
-                    grid.appendChild(button);
+                    cell.setAttribute('aria-label', 
+                    `${track} — ${points} points × ${multiplier} — ${currentValue} remaining`);
+                
+                const mainArea = document.createElement('div');
+                mainArea.className = 'counter-main';
+                
+                const trackName = document.createElement('div');
+                trackName.className = 'counter-track-name';
+                trackName.textContent = track;
+                
+                const pointsDisplay = document.createElement('div');
+                pointsDisplay.className = 'counter-points';
+                pointsDisplay.innerHTML = `${points} pts <span class="multiplier">× ${multiplier}</span>`;
+                
+                const value = document.createElement('div');
+                value.className = 'counter-value';
+                value.textContent = currentValue;
+                
+                const remaining = document.createElement('div');
+                remaining.className = 'counter-remaining';
+                remaining.textContent = 'remaining';
+                
+                mainArea.appendChild(trackName);
+                mainArea.appendChild(pointsDisplay);
+                mainArea.appendChild(value);
+                mainArea.appendChild(remaining);
+                
+                const plusBtn = document.createElement('button');
+                plusBtn.className = 'plus-btn';
+                plusBtn.textContent = '+';
+                plusBtn.setAttribute('aria-label', `Increment ${track} counter`);
+                plusBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    incrementCounter(points, track, cell);
                 });
+                
+                cell.appendChild(mainArea);
+                cell.appendChild(plusBtn);
+                
+                // Main area click
+                cell.addEventListener('click', (e) => {
+                    if (e.target === plusBtn || e.target.closest('.plus-btn')) {
+                        return;
+                    }
+                    if (!cell.classList.contains('disabled')) {
+                        decrementCounter(points, track, cell);
+                    }
+                });
+                
+                // Keyboard
+                cell.addEventListener('keydown', (e) => {
+                    if ((e.key === 'Enter' || e.key === ' ') && 
+                        !cell.classList.contains('disabled')) {
+                        e.preventDefault();
+                        decrementCounter(points, track, cell);
+                    }
+                });
+                
+                grid.appendChild(cell);
             });
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeMatrix();
         });
-    </script>
-</body>
-</html>
-```
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeMatrix();
+        
+        document.getElementById('overlayClose').addEventListener('click', hideOverlay);
+        document.getElementById('overlay').addEventListener('click', (e) => {
+            if (e.target.id === 'overlay') {
+                hideOverlay();
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('overlay').classList.contains('active')) {
+                hideOverlay();
+            }
+        });
+        
+        document.getElementById('resetBtn').addEventListener('click', resetAllCounters);
+    });
+</script>
