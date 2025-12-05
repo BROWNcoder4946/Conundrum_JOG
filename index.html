@@ -9,11 +9,62 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         /*
+        ═══════════════════════════════════════════════════════════════════════════════
         README - STRANGER GAMES MATRIX EVENT COUNTERS
+        ═══════════════════════════════════════════════════════════════════════════════
         
         PURPOSE:
-        This page displays a 4x5 matrix (20 cells) for event game counters.
+        This page displays a 4×5 matrix (20 cells) for event game counters.
         Each cell represents one Points/Track combination with a decrementing counter.
+        
+        HOW TO CONFIGURE INITIAL VALUES:
+        1. Scroll down to the <script> section
+        2. Find the "initialCounters" object (clearly marked with comments)
+        3. Edit the numeric values for each key (default: 10)
+        4. Keys use format: "POINTS_TrackName" (e.g., "100_DemogorgonArena")
+        
+        POINTS AND MULTIPLIERS:
+        - 100 pts × 1.25
+        - 250 pts × 1.5
+        - 500 pts × 1.75
+        - 1000 pts × 2
+        Multipliers shown in green throughout the interface.
+        
+        PERSISTENCE:
+        - Uses localStorage with keys: "vasel_counter_POINTS_TrackName"
+        - Example: "vasel_counter_100_DemogorgonArena"
+        - Values persist across page reloads and browser restarts
+        
+        HOW TO RESET COUNTERS:
+        Option A: Click the "RESET ROUND" button (prompts for confirmation)
+                  This resets all counters to initial values from initialCounters
+        Option B: Open browser DevTools → Application/Storage → Local Storage → 
+                  Delete keys starting with "vasel_counter_" → Reload page
+        Option C: Edit initialCounters values in code and clear localStorage
+        
+        COUNTER OPERATIONS:
+        - Click main box area: Decrements counter by 1 (if > 0), shows overlay
+        - Click "+" button: Increments counter by 1 (up to initial value), no overlay
+        - When counter reaches 0: Box darkens and disables main click area
+        - "+" button always works to correct mistakes and re-enable boxes
+        
+        OVERLAY:
+        After each decrement, a full-screen overlay appears showing:
+        - Track name, Points + Multiplier, Time, Remaining count
+        - Plays a beep sound effect
+        - Close with button or ESC key
+        
+        SUPPORTED BROWSERS:
+        Modern browsers with localStorage support (Chrome 4+, Firefox 3.5+, Safari 4+, Edge)
+        
+        STRUCTURE:
+        - 4 Points Tiers: 100, 250, 500, 1000
+        - 4 Time Tiers: 20s, 40s, 60s, 80s (respectively)
+        - 4 Multipliers: ×1.25, ×1.5, ×1.75, ×2 (respectively)
+        - 5 Tracks: Demogorgon Arena, Hawkins Lab Archives, The Upside Vault, 
+                    The Vision Zone, CREEL HOUSE CIRCUIT
+        
+        ═══════════════════════════════════════════════════════════════════════════════
         */
 
         * {
@@ -82,7 +133,7 @@
 
         .reset-container {
             text-align: center;
-            margin: 20px auto;
+            margin: 30px auto;
             padding: 0 20px;
         }
 
@@ -441,138 +492,9 @@
         .fade-in {
             animation: fadeIn 0.6s ease-out forwards;
         }
-
-        /* Intro and victory screens */
-
-        .hidden {
-            display: none;
-        }
-
-        .screen-overlay {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at center, rgba(255, 0, 0, 0.25), #050101 75%);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #introScreen {
-            animation: fadeInIntro 0.7s ease-out;
-        }
-
-        @keyframes fadeInIntro {
-            from { opacity: 0; transform: scale(1.02); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        #introScreen.fade-out {
-            animation: introFadeOut 0.6s ease forwards;
-        }
-
-        @keyframes introFadeOut {
-            to {
-                opacity: 0;
-                transform: scale(1.03);
-            }
-        }
-
-        .intro-content,
-        .victory-content {
-            background: linear-gradient(135deg, #1a0000 0%, #000000 100%);
-            border: 3px solid #ff0000;
-            border-radius: 14px;
-            padding: 40px 30px;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 60px rgba(255, 0, 0, 0.6);
-        }
-
-        .intro-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.8rem, 4.5vw, 2.6rem);
-            color: #ff0000;
-            letter-spacing: 4px;
-            margin-bottom: 16px;
-            text-shadow: 0 0 18px rgba(255, 0, 0, 0.8);
-        }
-
-        .intro-subtitle {
-            font-size: clamp(0.95rem, 2.4vw, 1.2rem);
-            color: #cccccc;
-            margin-bottom: 24px;
-        }
-
-        .intro-btn {
-            margin-top: 10px;
-        }
-
-        .victory-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.7rem, 4vw, 2.4rem);
-            color: #ff4444;
-            margin-bottom: 10px;
-        }
-
-        .winner-name {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 5vw, 3rem);
-            color: #ffffff;
-            margin-top: 12px;
-            text-shadow: 0 0 18px rgba(255, 255, 255, 0.7);
-        }
-
-        .victory-content {
-            animation: victoryPop 0.7s ease-out;
-        }
-
-        @keyframes victoryPop {
-            from { transform: scale(0.7); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .content-wrapper.game-ended {
-            animation: gameFadeOut 0.8s ease forwards;
-            pointer-events: none;
-        }
-
-        @keyframes gameFadeOut {
-            to {
-                opacity: 0;
-                transform: scale(0.95);
-                filter: blur(2px);
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- INTRO SCREEN -->
-    <div id="introScreen" class="screen-overlay">
-        <div class="intro-content">
-            <h1 class="intro-title">WELCOME TO THE STRANGER GAMES</h1>
-            <p class="intro-subtitle">
-                Choose your track, enter the Upside Down, and keep Hawkins in balance.
-            </p>
-            <button id="startGameBtn" class="reset-btn intro-btn">
-                ENTER THE UPSIDE DOWN
-            </button>
-        </div>
-    </div>
-
-    <!-- VICTORY SCREEN -->
-    <div id="victoryScreen" class="screen-overlay hidden">
-        <div class="victory-content">
-            <h2 class="victory-title">VICTORY CLAIMED</h2>
-            <p class="intro-subtitle">The champions of Hawkins are</p>
-            <div id="winnerName" class="winner-name">Team Name</div>
-            <button id="victoryCloseBtn" class="reset-btn" style="margin-top: 24px;">
-                RESET TO START
-            </button>
-        </div>
-    </div>
-
     <div class="content-wrapper">
         <section class="hero fade-in">
             <h1>STRANGER GAMES MATRIX</h1>
@@ -590,14 +512,6 @@
             <button class="reset-btn" id="bgmToggle" aria-label="Toggle background music"
                 style="padding: 8px 20px; font-size: 0.9rem;">
                 PLAY THE UPSIDE DOWN
-            </button>
-        </div>
-
-        <!-- END GAME BUTTON -->
-        <div class="reset-container fade-in">
-            <button class="reset-btn" id="endGameBtn" aria-label="End the game and show winner screen"
-                style="padding: 8px 20px; font-size: 0.9rem; background: rgba(0, 0, 0, 0.6);">
-                END GAME
             </button>
         </div>
 
@@ -640,36 +554,47 @@
     </audio>
 
     <script>
+        // ═══════════════════════════════════════════════════════════════════════════════
         // EDIT INITIAL VALUES HERE BEFORE DEPLOYMENT
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // Change the numeric values below to set starting counter values for each cell.
+        // Default value: 10 for all cells.
+        // Key format: "POINTS_TrackName" (no spaces in track names)
+        // ═══════════════════════════════════════════════════════════════════════════════
+
         const initialCounters = {
-            // 100 Points / 20 Seconds / x1.25 Row
+            // 100 Points / 20 Seconds / ×1.25 Row
             "100_DemogorgonArena": 10,
             "100_HawkinsLabArchives": 10,
             "100_TheUpsideVault": 10,
             "100_TheVisionZone": 10,
             "100_CREELHOUSECIRCUIT": 10,
             
-            // 250 Points / 40 Seconds / x1.5 Row
+            // 250 Points / 40 Seconds / ×1.5 Row
             "250_DemogorgonArena": 10,
             "250_HawkinsLabArchives": 10,
             "250_TheUpsideVault": 10,
             "250_TheVisionZone": 10,
             "250_CREELHOUSECIRCUIT": 10,
             
-            // 500 Points / 60 Seconds / x1.75 Row
+            // 500 Points / 60 Seconds / ×1.75 Row
             "500_DemogorgonArena": 10,
             "500_HawkinsLabArchives": 10,
             "500_TheUpsideVault": 10,
             "500_TheVisionZone": 10,
             "500_CREELHOUSECIRCUIT": 10,
             
-            // 1000 Points / 80 Seconds / x2 Row
+            // 1000 Points / 80 Seconds / ×2 Row
             "1000_DemogorgonArena": 10,
             "1000_HawkinsLabArchives": 10,
             "1000_TheUpsideVault": 10,
             "1000_TheVisionZone": 10,
             "1000_CREELHOUSECIRCUIT": 10
         };
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // CORE COUNTER LOGIC - DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING
+        // ═══════════════════════════════════════════════════════════════════════════════
 
         const POINTS_TIERS = [100, 250, 500, 1000];
         const TIME_TIERS = [20, 40, 60, 80];
@@ -770,10 +695,10 @@
             valueElement.textContent = newValue;
             
             button.setAttribute('aria-label', 
-                `${track} - ${points} points x ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]} - ${newValue} remaining`);
+                `${track} — ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]} — ${newValue} remaining`);
             
             const announcer = document.getElementById('announcer');
-            announcer.textContent = `${track}, ${points} points x ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
+            announcer.textContent = `${track}, ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
             
             if (newValue === 0) {
                 button.classList.add('disabled');
@@ -804,10 +729,10 @@
             valueElement.textContent = newValue;
             
             button.setAttribute('aria-label', 
-                `${track} - ${points} points x ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]} - ${newValue} remaining`);
+                `${track} — ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]} — ${newValue} remaining`);
             
             const announcer = document.getElementById('announcer');
-            announcer.textContent = `${track}, ${points} points x ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
+            announcer.textContent = `${track}, ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
             
             if (newValue > 0) {
                 button.classList.remove('disabled');
@@ -825,12 +750,13 @@
             document.getElementById('overlayTrack').textContent = track;
             document.getElementById('overlayDetails').textContent = `${track} play triggered!`;
             document.getElementById('overlayPoints').innerHTML = 
-                `${points} pts <span class="overlay-multiplier">x ${multiplier}</span> · ${time}s`;
+                `${points} pts <span class="overlay-multiplier">× ${multiplier}</span> · ${time}s`;
             document.getElementById('overlayRemaining').textContent = remaining;
             
             overlay.classList.add('active');
             playBeep();
             
+            // Focus trap
             const closeBtn = document.getElementById('overlayClose');
             closeBtn.focus();
         }
@@ -853,6 +779,7 @@
                 });
             });
             
+            // Reload page to refresh all UI
             location.reload();
         }
 
@@ -867,7 +794,7 @@
                 // Points label
                 const pointsLabel = document.createElement('div');
                 pointsLabel.className = 'matrix-label';
-                pointsLabel.innerHTML = `${points} pts<div class="multiplier">x ${multiplier}</div>`;
+                pointsLabel.innerHTML = `${points} pts<div class="multiplier">× ${multiplier}</div>`;
                 grid.appendChild(pointsLabel);
                 
                 // Time label
@@ -890,7 +817,7 @@
                         cell.setAttribute('aria-disabled', 'true');
                     }
                     cell.setAttribute('aria-label', 
-                        `${track} - ${points} points x ${multiplier} - ${currentValue} remaining`);
+                        `${track} — ${points} points × ${multiplier} — ${currentValue} remaining`);
                     
                     const mainArea = document.createElement('div');
                     mainArea.className = 'counter-main';
@@ -901,7 +828,7 @@
                     
                     const pointsDisplay = document.createElement('div');
                     pointsDisplay.className = 'counter-points';
-                    pointsDisplay.innerHTML = `${points} pts <span class="multiplier">x ${multiplier}</span>`;
+                    pointsDisplay.innerHTML = `${points} pts <span class="multiplier">× ${multiplier}</span>`;
                     
                     const value = document.createElement('div');
                     value.className = 'counter-value';
@@ -991,54 +918,6 @@
                     } catch (err) {
                         console.log('Audio play was blocked by the browser', err);
                     }
-                });
-            }
-
-            // INTRO AND VICTORY SCREEN LOGIC
-            const introScreen = document.getElementById('introScreen');
-            const startGameBtn = document.getElementById('startGameBtn');
-            const victoryScreen = document.getElementById('victoryScreen');
-            const winnerNameEl = document.getElementById('winnerName');
-            const victoryCloseBtn = document.getElementById('victoryCloseBtn');
-            const endGameBtn = document.getElementById('endGameBtn');
-            const contentWrapper = document.querySelector('.content-wrapper');
-
-            if (startGameBtn && introScreen) {
-                startGameBtn.addEventListener('click', async () => {
-                    introScreen.classList.add('fade-out');
-                    setTimeout(() => {
-                        introScreen.classList.add('hidden');
-                    }, 600);
-
-                    if (bgmAudio) {
-                        try {
-                            await bgmAudio.play();
-                            bgmPlaying = true;
-                            if (bgmToggle) {
-                                bgmToggle.textContent = 'PAUSE THE UPSIDE DOWN';
-                            }
-                        } catch (err) {
-                            console.log('Audio play was blocked when starting game', err);
-                        }
-                    }
-                });
-            }
-
-            if (endGameBtn && victoryScreen && contentWrapper && winnerNameEl) {
-                endGameBtn.addEventListener('click', () => {
-                    const name = prompt('Enter winning team name:');
-                    if (!name) {
-                        return;
-                    }
-                    winnerNameEl.textContent = name;
-                    contentWrapper.classList.add('game-ended');
-                    victoryScreen.classList.remove('hidden');
-                });
-            }
-
-            if (victoryCloseBtn && victoryScreen && contentWrapper) {
-                victoryCloseBtn.addEventListener('click', () => {
-                    location.reload();
                 });
             }
         });
