@@ -501,7 +501,7 @@
             <p>Interactive Event Counter System</p>
         </section>
 
-       <div class="reset-container fade-in">
+        <div class="reset-container fade-in">
             <button class="reset-btn" id="resetBtn" aria-label="Reset all counters to initial values">
                 RESET ROUND
             </button>
@@ -543,7 +543,7 @@
             </div>
         </div>
 
-                <footer class="footer">
+        <footer class="footer">
             <p>Event designed in the spirit of Hawkins · Click box to decrement · Use + to correct mistakes</p>
         </footer>
     </div>
@@ -554,8 +554,6 @@
     </audio>
 
     <script>
-        // your existing JS here...
-
         // ═══════════════════════════════════════════════════════════════════════════════
         // EDIT INITIAL VALUES HERE BEFORE DEPLOYMENT
         // ═══════════════════════════════════════════════════════════════════════════════
@@ -595,7 +593,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════════════════════════
-        // CORE COUNTER LOGIC - DO NOT EDIT UNLESS YOU KNOW WHAT YOU'RE DOING
+        // CORE COUNTER LOGIC - DO NOT EDIT UNLESS YOU KNOW WHAT YOU ARE DOING
         // ═══════════════════════════════════════════════════════════════════════════════
 
         const POINTS_TIERS = [100, 250, 500, 1000];
@@ -618,26 +616,24 @@
             }
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  function playBeep() {
-    initAudio();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
-    
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.3);
-}
+        function playBeep() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
         // Normalize track name for storage key
         function normalizeTrackName(trackName) {
             return trackName.replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '');
@@ -710,40 +706,55 @@
             }
             
             // Show overlay
-            showOverlay(points, track, newValue)
-                 {
-    const overlay = document.getElementById('overlay');
-    const rowIndex = POINTS_TIERS.indexOf(points);
-    const time = TIME_TIERS[rowIndex];
-    const multiplier = MULTIPLIERS[rowIndex];
-    
-    document.getElementById('overlayTrack').textContent = track;
-    document.getElementById('overlayDetails').textContent = `${track} play triggered!`;
-    document.getElementById('overlayPoints').innerHTML = 
-        `${points} pts <span class="overlay-multiplier">× ${multiplier}</span> · ${time}s`;
-    document.getElementById('overlayRemaining').textContent = remaining;
-    
-    overlay.classList.add('active');
-     // Trigger tier specific sound
-    function playBeep() {
-    initAudio();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
-    
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.3);
-}
+            showOverlay(points, track, newValue);
+            
+            setTimeout(() => {
+                activeDecrements.delete(cellId);
+            }, 200);
+        }
+
+        // Increment counter (+ button)
+        function incrementCounter(points, track, button) {
+            const currentValue = readValue(points, track);
+            const maxValue = getInitialValue(points, track);
+            
+            if (currentValue >= maxValue) {
+                return;
+            }
+            
+            const newValue = currentValue + 1;
+            saveValue(points, track, newValue);
+            
+            const valueElement = button.querySelector('.counter-value');
+            valueElement.textContent = newValue;
+            
+            button.setAttribute('aria-label', 
+                `${track} — ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]} — ${newValue} remaining`);
+            
+            const announcer = document.getElementById('announcer');
+            announcer.textContent = `${track}, ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
+            
+            if (newValue > 0) {
+                button.classList.remove('disabled');
+                button.setAttribute('aria-disabled', 'false');
+            }
+        }
+
         // Show overlay
-        function showOverlay(points, track, remaining) ;
+        function showOverlay(points, track, remaining) {
+            const overlay = document.getElementById('overlay');
+            const rowIndex = POINTS_TIERS.indexOf(points);
+            const time = TIME_TIERS[rowIndex];
+            const multiplier = MULTIPLIERS[rowIndex];
+            
+            document.getElementById('overlayTrack').textContent = track;
+            document.getElementById('overlayDetails').textContent = `${track} play triggered!`;
+            document.getElementById('overlayPoints').innerHTML = 
+                `${points} pts <span class="overlay-multiplier">× ${multiplier}</span> · ${time}s`;
+            document.getElementById('overlayRemaining').textContent = remaining;
+            
+            overlay.classList.add('active');
+            playBeep();
             
             // Focus trap
             const closeBtn = document.getElementById('overlayClose');
@@ -806,113 +817,110 @@
                         cell.setAttribute('aria-disabled', 'true');
                     }
                     cell.setAttribute('aria-label', 
-                    `${track} — ${points} points × ${multiplier} — ${currentValue} remaining`);
-                
-                const mainArea = document.createElement('div');
-                mainArea.className = 'counter-main';
-                
-                const trackName = document.createElement('div');
-                trackName.className = 'counter-track-name';
-                trackName.textContent = track;
-                
-                const pointsDisplay = document.createElement('div');
-                pointsDisplay.className = 'counter-points';
-                pointsDisplay.innerHTML = `${points} pts <span class="multiplier">× ${multiplier}</span>`;
-                
-                const value = document.createElement('div');
-                value.className = 'counter-value';
-                value.textContent = currentValue;
-                
-                const remaining = document.createElement('div');
-                remaining.className = 'counter-remaining';
-                remaining.textContent = 'remaining';
-                
-                mainArea.appendChild(trackName);
-                mainArea.appendChild(pointsDisplay);
-                mainArea.appendChild(value);
-                mainArea.appendChild(remaining);
-                
-                const plusBtn = document.createElement('button');
-                plusBtn.className = 'plus-btn';
-                plusBtn.textContent = '+';
-                plusBtn.setAttribute('aria-label', `Increment ${track} counter`);
-                plusBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    incrementCounter(points, track, cell);
+                        `${track} — ${points} points × ${multiplier} — ${currentValue} remaining`);
+                    
+                    const mainArea = document.createElement('div');
+                    mainArea.className = 'counter-main';
+                    
+                    const trackName = document.createElement('div');
+                    trackName.className = 'counter-track-name';
+                    trackName.textContent = track;
+                    
+                    const pointsDisplay = document.createElement('div');
+                    pointsDisplay.className = 'counter-points';
+                    pointsDisplay.innerHTML = `${points} pts <span class="multiplier">× ${multiplier}</span>`;
+                    
+                    const value = document.createElement('div');
+                    value.className = 'counter-value';
+                    value.textContent = currentValue;
+                    
+                    const remaining = document.createElement('div');
+                    remaining.className = 'counter-remaining';
+                    remaining.textContent = 'remaining';
+                    
+                    mainArea.appendChild(trackName);
+                    mainArea.appendChild(pointsDisplay);
+                    mainArea.appendChild(value);
+                    mainArea.appendChild(remaining);
+                    
+                    const plusBtn = document.createElement('button');
+                    plusBtn.className = 'plus-btn';
+                    plusBtn.textContent = '+';
+                    plusBtn.setAttribute('aria-label', `Increment ${track} counter`);
+                    plusBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        incrementCounter(points, track, cell);
+                    });
+                    
+                    cell.appendChild(mainArea);
+                    cell.appendChild(plusBtn);
+                    
+                    // Main area click
+                    cell.addEventListener('click', (e) => {
+                        if (e.target === plusBtn || e.target.closest('.plus-btn')) {
+                            return;
+                        }
+                        if (!cell.classList.contains('disabled')) {
+                            decrementCounter(points, track, cell);
+                        }
+                    });
+                    
+                    // Keyboard
+                    cell.addEventListener('keydown', (e) => {
+                        if ((e.key === 'Enter' || e.key === ' ') && 
+                            !cell.classList.contains('disabled')) {
+                            e.preventDefault();
+                            decrementCounter(points, track, cell);
+                        }
+                    });
+                    
+                    grid.appendChild(cell);
                 });
-                
-                cell.appendChild(mainArea);
-                cell.appendChild(plusBtn);
-                
-                // Main area click
-                cell.addEventListener('click', (e) => {
-                    if (e.target === plusBtn || e.target.closest('.plus-btn')) {
-                        return;
-                    }
-                    if (!cell.classList.contains('disabled')) {
-                        decrementCounter(points, track, cell);
-                    }
-                });
-                
-                // Keyboard
-                cell.addEventListener('keydown', (e) => {
-                    if ((e.key === 'Enter' || e.key === ' ') && 
-                        !cell.classList.contains('disabled')) {
-                        e.preventDefault();
-                        decrementCounter(points, track, cell);
-                    }
-                });
-                
-                grid.appendChild(cell);
-            });
-        });
-    }
-
-        // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-        initializeMatrix();
-        
-        document.getElementById('overlayClose').addEventListener('click', hideOverlay);
-        document.getElementById('overlay').addEventListener('click', (e) => {
-            if (e.target.id === 'overlay') {
-                hideOverlay();
-            }
-        });
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.getElementById('overlay').classList.contains('active')) {
-                hideOverlay();
-            }
-        });
-        
-        document.getElementById('resetBtn').addEventListener('click', resetAllCounters);
-
-        // ═══════════════════════════════════════════════
-        // BGM CONTROL LOGIC
-        // ═══════════════════════════════════════════════
-        const bgmAudio = document.getElementById('bgmAudio');
-        const bgmToggle = document.getElementById('bgmToggle');
-        let bgmPlaying = false;
-
-        if (bgmAudio && bgmToggle) {
-            bgmToggle.addEventListener('click', async () => {
-                try {
-                    if (!bgmPlaying) {
-                        await bgmAudio.play();
-                        bgmPlaying = true;
-                        bgmToggle.textContent = 'PAUSE THE UPSIDE DOWN';
-                    } else {
-                        bgmAudio.pause();
-                        bgmPlaying = false;
-                        bgmToggle.textContent = 'PLAY THE UPSIDE DOWN';
-                    }
-                } catch (err) {
-                    console.log('Audio play was blocked by the browser', err);
-                }
             });
         }
-    });
 
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMatrix();
+            
+            document.getElementById('overlayClose').addEventListener('click', hideOverlay);
+            document.getElementById('overlay').addEventListener('click', (e) => {
+                if (e.target.id === 'overlay') {
+                    hideOverlay();
+                }
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && document.getElementById('overlay').classList.contains('active')) {
+                    hideOverlay();
+                }
+            });
+            
+            document.getElementById('resetBtn').addEventListener('click', resetAllCounters);
 
-        
-</script>
+            // BGM CONTROL LOGIC
+            const bgmAudio = document.getElementById('bgmAudio');
+            const bgmToggle = document.getElementById('bgmToggle');
+            let bgmPlaying = false;
+
+            if (bgmAudio && bgmToggle) {
+                bgmToggle.addEventListener('click', async () => {
+                    try {
+                        if (!bgmPlaying) {
+                            await bgmAudio.play();
+                            bgmPlaying = true;
+                            bgmToggle.textContent = 'PAUSE THE UPSIDE DOWN';
+                        } else {
+                            bgmAudio.pause();
+                            bgmPlaying = false;
+                            bgmToggle.textContent = 'PLAY THE UPSIDE DOWN';
+                        }
+                    } catch (err) {
+                        console.log('Audio play was blocked by the browser', err);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
