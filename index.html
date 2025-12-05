@@ -618,7 +618,11 @@
             }
         }
 
+<<<<<<< HEAD
    function playTierBeep(points) {
+=======
+      function playTierBeep(points) {
+>>>>>>> parent of 6f7de66 (Update index.html)
     initAudio();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
@@ -656,7 +660,6 @@
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.3);
 }
-
 
         // Normalize track name for storage key
         function normalizeTrackName(trackName) {
