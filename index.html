@@ -21,7 +21,7 @@
         1. Scroll down to the <script> section
         2. Find the "initialCounters" object (clearly marked with comments)
         3. Edit the numeric values for each key (default: 10)
-        4. Keys use format: "POINTS_TrackName" (e.g., "100_DemogorgonArena")
+        4. Keys use format: "POINTS_TrackName" (e.g., "100_HawkinsBattleHub")
         
         POINTS AND MULTIPLIERS:
         - 100 pts × 1.25
@@ -32,7 +32,7 @@
         
         PERSISTENCE:
         - Uses localStorage with keys: "vasel_counter_POINTS_TrackName"
-        - Example: "vasel_counter_100_DemogorgonArena"
+        - Example: "vasel_counter_100_HawkinsBattleHub"
         - Values persist across page reloads and browser restarts
         
         HOW TO RESET COUNTERS:
@@ -50,7 +50,7 @@
         
         OVERLAY:
         After each decrement, a full-screen overlay appears showing:
-        - Track name, Points + Multiplier, Time, Remaining count
+        - Track name, Points + Multiplier, Remaining count
         - Plays a beep sound effect
         - Close with button or ESC key
         
@@ -59,10 +59,9 @@
         
         STRUCTURE:
         - 4 Points Tiers: 100, 250, 500, 1000
-        - 4 Time Tiers: 20s, 40s, 60s, 80s (respectively)
         - 4 Multipliers: ×1.25, ×1.5, ×1.75, ×2 (respectively)
-        - 5 Tracks: Demogorgon Arena, Hawkins Lab Archives, The Upside Vault, 
-                    The Vision Zone, CREEL HOUSE CIRCUIT
+        - 5 Tracks: Hawkins Battle Hub, Lab Experiments, The Upside Portal, 
+                    Shadow Play, Gate of Chance
         
         ═══════════════════════════════════════════════════════════════════════════════
         */
@@ -79,8 +78,8 @@
         - --font-size-hero-subtitle: Subtitle text below the main title
         - --font-size-reset-btn: Reset button and BGM button text
         - --font-size-section-heading: Section headings like "Live Counter Matrix"
-        - --font-size-matrix-header: Column headers (POINTS, TIME, track names)
-        - --font-size-matrix-label: Row labels (100 pts, 250 pts, etc. and time values)
+        - --font-size-matrix-header: Column headers (POINTS and track names)
+        - --font-size-matrix-label: Row labels (100 pts, 250 pts, etc.)
         - --font-size-matrix-multiplier: Multiplier text (× 1.25, × 1.5, etc.)
         - --font-size-counter-track-name: Track name inside each counter cell
         - --font-size-counter-points: Points display inside each counter cell
@@ -240,7 +239,7 @@
 
         .matrix-grid {
             display: grid;
-            grid-template-columns: 120px 80px repeat(5, 1fr);
+            grid-template-columns: 120px repeat(5, 1fr);
             min-width: 1100px;
             gap: 1px;
             background: #8b0000;
@@ -573,12 +572,11 @@
             <div class="matrix-container">
                 <div class="matrix-grid" id="matrixGrid">
                     <div class="matrix-header">POINTS</div>
-                    <div class="matrix-header">TIME</div>
-                    <div class="matrix-header">Demogorgon Arena</div>
-                    <div class="matrix-header">Hawkins Lab Archives</div>
-                    <div class="matrix-header">The Upside Vault</div>
-                    <div class="matrix-header">The Vision Zone</div>
-                    <div class="matrix-header">CREEL HOUSE CIRCUIT</div>
+                    <div class="matrix-header">Hawkins Battle Hub</div>
+                    <div class="matrix-header">Lab Experiments</div>
+                    <div class="matrix-header">The Upside Portal</div>
+                    <div class="matrix-header">Shadow Play</div>
+                    <div class="matrix-header">Gate of Chance</div>
                 </div>
             </div>
         </section>
@@ -612,37 +610,37 @@
         // ═══════════════════════════════════════════════════════════════════════════════
         // Change the numeric values below to set starting counter values for each cell.
         // Default value: 10 for all cells.
-        // Key format: "POINTS_TrackName" (no spaces in track names)
+        // Key format: "POINTS_TrackName" (e.g., "100_HawkinsBattleHub")
         // ═══════════════════════════════════════════════════════════════════════════════
 
         const initialCounters = {
-            // 100 Points / 20 Seconds / ×1.25 Row
-            "100_DemogorgonArena": 10,
-            "100_HawkinsLabArchives": 10,
-            "100_TheUpsideVault": 10,
-            "100_TheVisionZone": 10,
-            "100_CREELHOUSECIRCUIT": 10,
+            // 100 Points / ×1.25 Row
+            "100_HawkinsBattleHub": 10,
+            "100_LabExperiments": 10,
+            "100_TheUpsidePortal": 10,
+            "100_ShadowPlay": 10,
+            "100_GateofChance": 10,
             
-            // 250 Points / 40 Seconds / ×1.5 Row
-            "250_DemogorgonArena": 10,
-            "250_HawkinsLabArchives": 10,
-            "250_TheUpsideVault": 10,
-            "250_TheVisionZone": 10,
-            "250_CREELHOUSECIRCUIT": 10,
+            // 250 Points / ×1.5 Row
+            "250_HawkinsBattleHub": 10,
+            "250_LabExperiments": 10,
+            "250_TheUpsidePortal": 10,
+            "250_ShadowPlay": 10,
+            "250_GateofChance": 10,
             
-            // 500 Points / 60 Seconds / ×1.75 Row
-            "500_DemogorgonArena": 10,
-            "500_HawkinsLabArchives": 10,
-            "500_TheUpsideVault": 10,
-            "500_TheVisionZone": 10,
-            "500_CREELHOUSECIRCUIT": 10,
+            // 500 Points / ×1.75 Row
+            "500_HawkinsBattleHub": 10,
+            "500_LabExperiments": 10,
+            "500_TheUpsidePortal": 10,
+            "500_ShadowPlay": 10,
+            "500_GateofChance": 10,
             
-            // 1000 Points / 80 Seconds / ×2 Row
-            "1000_DemogorgonArena": 10,
-            "1000_HawkinsLabArchives": 10,
-            "1000_TheUpsideVault": 10,
-            "1000_TheVisionZone": 10,
-            "1000_CREELHOUSECIRCUIT": 10
+            // 1000 Points / ×2 Row
+            "1000_HawkinsBattleHub": 10,
+            "1000_LabExperiments": 10,
+            "1000_TheUpsidePortal": 10,
+            "1000_ShadowPlay": 10,
+            "1000_GateofChance": 10
         };
 
         // ═══════════════════════════════════════════════════════════════════════════════
@@ -650,14 +648,13 @@
         // ═══════════════════════════════════════════════════════════════════════════════
 
         const POINTS_TIERS = [100, 250, 500, 1000];
-        const TIME_TIERS = [20, 40, 60, 80];
         const MULTIPLIERS = [1.25, 1.5, 1.75, 2];
         const TRACKS = [
-            "Demogorgon Arena",
-            "Hawkins Lab Archives",
-            "The Upside Vault",
-            "The Vision Zone",
-            "CREEL HOUSE CIRCUIT"
+            "Hawkins Battle Hub",
+            "Lab Experiments",
+            "The Upside Portal",
+            "Shadow Play",
+            "Gate of Chance"
         ];
 
         // Audio context for beep sound
@@ -752,25 +749,26 @@
             
             const announcer = document.getElementById('announcer');
             announcer.textContent = `${track}, ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
+            
             if (newValue === 0) {
-            button.classList.add('disabled');
-            button.setAttribute('aria-disabled', 'true');
+                button.classList.add('disabled');
+                button.setAttribute('aria-disabled', 'true');
+            }
+            
+            // Show overlay
+            showOverlay(points, track, newValue);
+            
+            setTimeout(() => {
+                activeDecrements.delete(cellId);
+            }, 200);
         }
-        
-        // Show overlay
-        showOverlay(points, track, newValue);
-        
-        setTimeout(() => {
-            activeDecrements.delete(cellId);
-        }, 200);
-    }
 
-    // Increment counter (+ button)
-    function incrementCounter(points, track, button) {
-        const currentValue = readValue(points, track);
-        const maxValue = getInitialValue(points, track);
-        
-        if (currentValue >= maxValue) {
+        // Increment counter (+ button)
+        function incrementCounter(points, track, button) {
+            const currentValue
+            = readValue(points, track);
+            const maxValue = getInitialValue(points, track);
+            if (currentValue >= maxValue) {
             return;
         }
         
@@ -796,13 +794,12 @@
     function showOverlay(points, track, remaining) {
         const overlay = document.getElementById('overlay');
         const rowIndex = POINTS_TIERS.indexOf(points);
-        const time = TIME_TIERS[rowIndex];
         const multiplier = MULTIPLIERS[rowIndex];
         
         document.getElementById('overlayTrack').textContent = track;
         document.getElementById('overlayDetails').textContent = `${track} play triggered!`;
         document.getElementById('overlayPoints').innerHTML = 
-            `${points} <span class="overlay-multiplier">× ${multiplier}</span> · ${time}s`;
+            `${points} pts <span class="overlay-multiplier">× ${multiplier}</span>`;
         document.getElementById('overlayRemaining').textContent = remaining;
         
         overlay.classList.add('active');
@@ -840,20 +837,13 @@
         const grid = document.getElementById('matrixGrid');
         
         POINTS_TIERS.forEach((points, rowIndex) => {
-            const time = TIME_TIERS[rowIndex];
             const multiplier = MULTIPLIERS[rowIndex];
             
             // Points label
             const pointsLabel = document.createElement('div');
             pointsLabel.className = 'matrix-label';
-            pointsLabel.innerHTML = `${points} <div class="multiplier">× ${multiplier}</div>`;
+            pointsLabel.innerHTML = `${points} pts<div class="multiplier">× ${multiplier}</div>`;
             grid.appendChild(pointsLabel);
-            
-            // Time label
-            const timeLabel = document.createElement('div');
-            timeLabel.className = 'matrix-label';
-            timeLabel.textContent = `${time}s`;
-            grid.appendChild(timeLabel);
             
             // Counter cells
             TRACKS.forEach(track => {
@@ -880,7 +870,7 @@
                 
                 const pointsDisplay = document.createElement('div');
                 pointsDisplay.className = 'counter-points';
-                pointsDisplay.innerHTML = `${points} <span class="multiplier">× ${multiplier}</span>`;
+                pointsDisplay.innerHTML = `${points} pts <span class="multiplier">× ${multiplier}</span>`;
                 
                 const value = document.createElement('div');
                 value.className = 'counter-value';
