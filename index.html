@@ -67,6 +67,59 @@
         ═══════════════════════════════════════════════════════════════════════════════
         */
 
+        /*
+        ═══════════════════════════════════════════════════════════════════════════════
+        FONT SIZE CONTROL VARIABLES
+        ═══════════════════════════════════════════════════════════════════════════════
+        
+        Modify these CSS custom properties to control font sizes throughout the page.
+        Each variable controls a specific group of text elements:
+        
+        - --font-size-hero-title: Main page title "STRANGER GAMES MATRIX"
+        - --font-size-hero-subtitle: Subtitle text below the main title
+        - --font-size-reset-btn: Reset button and BGM button text
+        - --font-size-section-heading: Section headings like "Live Counter Matrix"
+        - --font-size-matrix-header: Column headers (POINTS, TIME, track names)
+        - --font-size-matrix-label: Row labels (100 pts, 250 pts, etc. and time values)
+        - --font-size-matrix-multiplier: Multiplier text (× 1.25, × 1.5, etc.)
+        - --font-size-counter-track-name: Track name inside each counter cell
+        - --font-size-counter-points: Points display inside each counter cell
+        - --font-size-counter-value: Large number in center of counter cell
+        - --font-size-counter-remaining: "remaining" text below counter value
+        - --font-size-plus-btn: "+" button text
+        - --font-size-overlay-track: Track name in overlay popup
+        - --font-size-overlay-details: Description text in overlay
+        - --font-size-overlay-points: Points and multiplier in overlay
+        - --font-size-overlay-remaining: Large remaining count in overlay
+        - --font-size-overlay-label: "remaining" label in overlay
+        - --font-size-overlay-close: Close button (×) in overlay
+        - --font-size-footer: Footer text at bottom of page
+        
+        ═══════════════════════════════════════════════════════════════════════════════
+        */
+
+        :root {
+            --font-size-hero-title: clamp(2rem, 7vw, 4.5rem);
+            --font-size-hero-subtitle: clamp(0.9rem, 2.5vw, 1.3rem);
+            --font-size-reset-btn: 1rem;
+            --font-size-section-heading: clamp(1.8rem, 4vw, 2.8rem);
+            --font-size-matrix-header: clamp(1rem, 2.0vw, 1.4rem);
+            --font-size-matrix-label: clamp(1.5rem, 3vw, 2.0rem);
+            --font-size-matrix-multiplier: 0.6em;
+            --font-size-counter-track-name: clamp(0.7rem, 1.2vw, 0.85rem);
+            --font-size-counter-points: clamp(0.65rem, 1.1vw, 0.75rem);
+            --font-size-counter-value: clamp(2rem, 4vw, 3.5rem);
+            --font-size-counter-remaining: clamp(0.65rem, 1.1vw, 0.75rem);
+            --font-size-plus-btn: 1.2rem;
+            --font-size-overlay-track: clamp(1.5rem, 4vw, 2rem);
+            --font-size-overlay-details: clamp(1rem, 2.5vw, 1.3rem);
+            --font-size-overlay-points: clamp(1.2rem, 3vw, 1.6rem);
+            --font-size-overlay-remaining: clamp(2.5rem, 6vw, 4rem);
+            --font-size-overlay-label: clamp(0.9rem, 2vw, 1.1rem);
+            --font-size-overlay-close: 1.5rem;
+            --font-size-footer: 0.95rem;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -112,7 +165,7 @@
 
         .hero h1 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 7vw, 4.5rem);
+            font-size: var(--font-size-hero-title);
             color: #ff0000;
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.5);
             letter-spacing: 4px;
@@ -126,7 +179,7 @@
         }
 
         .hero p {
-            font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+            font-size: var(--font-size-hero-subtitle);
             color: #999;
             letter-spacing: 2px;
         }
@@ -143,7 +196,7 @@
             color: #ff4444;
             border: 2px solid #8b0000;
             padding: 12px 30px;
-            font-size: 1rem;
+            font-size: var(--font-size-reset-btn);
             cursor: pointer;
             border-radius: 6px;
             transition: all 0.3s ease;
@@ -170,7 +223,7 @@
 
         .matrix-section h2 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-size: var(--font-size-section-heading);
             color: #ff0000;
             text-align: center;
             margin-bottom: 40px;
@@ -193,46 +246,40 @@
             background: #8b0000;
         }
 
-    .matrix-header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: #1a0000;
-    color: #ff4444;
-    padding: 20px 10px;
-    text-align: center;
-    font-family: 'Cinzel', serif;
-    font-weight: 700;
+        .matrix-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #1a0000;
+            color: #ff4444;
+            padding: 20px 10px;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: var(--font-size-matrix-header);
+            text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+        }
 
-    /* BIGGER FONT FOR "POINTS" / "TIME" / TRACK NAMES */
-    font-size: clamp(1rem, 3.4vw, 2.4rem);
+        .matrix-label {
+            background: rgba(30, 0, 0, 0.9);
+            color: #ff6666;
+            padding: 25px 10px;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: var(--font-size-matrix-label);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+        }
 
-    text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-}
-
-.matrix-label {
-    background: rgba(30, 0, 0, 0.9);
-    color: #ff6666;
-    padding: 25px 10px;
-    text-align: center;
-    font-family: 'Cinzel', serif;
-    font-weight: 700;
-
-    /* BIGGER FONT FOR 100 PTS, 250 PTS, ETC */
-    font-size: clamp(1.8rem, 3vw, 2.2rem);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    line-height: 1.4;
-}
-
-.multiplier {
-    color: #4caf50;
-    font-size: 0.6em;   /* keeps ×1.25 slightly smaller than the main number */
-    margin-top: 4px;
-}
+        .multiplier {
+            color: #4caf50;
+            font-size: var(--font-size-matrix-multiplier);
+            margin-top: 4px;
+        }
 
         .counter-cell {
             background: rgba(40, 40, 40, 0.8);
@@ -289,7 +336,7 @@
         }
 
         .counter-track-name {
-            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            font-size: var(--font-size-counter-track-name);
             color: #ff8888;
             margin-bottom: 6px;
             text-align: center;
@@ -297,14 +344,14 @@
         }
 
         .counter-points {
-            font-size: clamp(0.65rem, 1.1vw, 0.75rem);
+            font-size: var(--font-size-counter-points);
             color: #ff6666;
             margin-bottom: 8px;
         }
 
         .counter-value {
             font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-size: var(--font-size-counter-value);
             color: #ff0000;
             font-weight: 700;
             text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
@@ -312,7 +359,7 @@
         }
 
         .counter-remaining {
-            font-size: clamp(0.65rem, 1.1vw, 0.75rem);
+            font-size: var(--font-size-counter-remaining);
             color: #999;
             margin-top: 5px;
         }
@@ -324,7 +371,7 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            font-size: 1.2rem;
+            font-size: var(--font-size-plus-btn);
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -394,7 +441,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            font-size: 1.5rem;
+            font-size: var(--font-size-overlay-close);
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -410,20 +457,20 @@
 
         .overlay-track {
             font-family: 'Cinzel', serif;
-            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-size: var(--font-size-overlay-track);
             color: #ff4444;
             margin-bottom: 20px;
             text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
         }
 
         .overlay-details {
-            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-size: var(--font-size-overlay-details);
             color: #ccc;
             margin-bottom: 15px;
         }
 
         .overlay-points {
-            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-size: var(--font-size-overlay-points);
             color: #ff6666;
             margin-bottom: 10px;
         }
@@ -435,14 +482,14 @@
 
         .overlay-remaining {
             font-family: 'Cinzel', serif;
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-size: var(--font-size-overlay-remaining);
             color: #ff0000;
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
             margin: 20px 0;
         }
 
         .overlay-label {
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-size: var(--font-size-overlay-label);
             color: #999;
         }
 
@@ -462,7 +509,7 @@
             text-align: center;
             padding: 40px 20px;
             color: #888;
-            font-size: 0.95rem;
+            font-size: var(--font-size-footer);
             border-top: 1px solid #8b0000;
             box-shadow: 0 -5px 20px rgba(255, 0, 0, 0.1);
         }
@@ -705,228 +752,227 @@
             
             const announcer = document.getElementById('announcer');
             announcer.textContent = `${track}, ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
-            
             if (newValue === 0) {
-                button.classList.add('disabled');
-                button.setAttribute('aria-disabled', 'true');
-            }
-            
-            // Show overlay
-            showOverlay(points, track, newValue);
-            
-            setTimeout(() => {
-                activeDecrements.delete(cellId);
-            }, 200);
+            button.classList.add('disabled');
+            button.setAttribute('aria-disabled', 'true');
         }
-
-        // Increment counter (+ button)
-        function incrementCounter(points, track, button) {
-            const currentValue = readValue(points, track);
-            const maxValue = getInitialValue(points, track);
-            
-            if (currentValue >= maxValue) {
-                return;
-            }
-            
-            const newValue = currentValue + 1;
-            saveValue(points, track, newValue);
-            
-            const valueElement = button.querySelector('.counter-value');
-            valueElement.textContent = newValue;
-            
-            button.setAttribute('aria-label', 
-                `${track} — ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]} — ${newValue} remaining`);
-            
-            const announcer = document.getElementById('announcer');
-            announcer.textContent = `${track}, ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
-            
-            if (newValue > 0) {
-                button.classList.remove('disabled');
-                button.setAttribute('aria-disabled', 'false');
-            }
-        }
-
+        
         // Show overlay
-        function showOverlay(points, track, remaining) {
-            const overlay = document.getElementById('overlay');
-            const rowIndex = POINTS_TIERS.indexOf(points);
+        showOverlay(points, track, newValue);
+        
+        setTimeout(() => {
+            activeDecrements.delete(cellId);
+        }, 200);
+    }
+
+    // Increment counter (+ button)
+    function incrementCounter(points, track, button) {
+        const currentValue = readValue(points, track);
+        const maxValue = getInitialValue(points, track);
+        
+        if (currentValue >= maxValue) {
+            return;
+        }
+        
+        const newValue = currentValue + 1;
+        saveValue(points, track, newValue);
+        
+        const valueElement = button.querySelector('.counter-value');
+        valueElement.textContent = newValue;
+        
+        button.setAttribute('aria-label', 
+            `${track} — ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]} — ${newValue} remaining`);
+        
+        const announcer = document.getElementById('announcer');
+        announcer.textContent = `${track}, ${points} points × ${MULTIPLIERS[POINTS_TIERS.indexOf(points)]}: ${newValue} remaining`;
+        
+        if (newValue > 0) {
+            button.classList.remove('disabled');
+            button.setAttribute('aria-disabled', 'false');
+        }
+    }
+
+    // Show overlay
+    function showOverlay(points, track, remaining) {
+        const overlay = document.getElementById('overlay');
+        const rowIndex = POINTS_TIERS.indexOf(points);
+        const time = TIME_TIERS[rowIndex];
+        const multiplier = MULTIPLIERS[rowIndex];
+        
+        document.getElementById('overlayTrack').textContent = track;
+        document.getElementById('overlayDetails').textContent = `${track} play triggered!`;
+        document.getElementById('overlayPoints').innerHTML = 
+            `${points} <span class="overlay-multiplier">× ${multiplier}</span> · ${time}s`;
+        document.getElementById('overlayRemaining').textContent = remaining;
+        
+        overlay.classList.add('active');
+        playBeep();
+        
+        // Focus trap
+        const closeBtn = document.getElementById('overlayClose');
+        closeBtn.focus();
+    }
+
+    // Hide overlay
+    function hideOverlay() {
+        document.getElementById('overlay').classList.remove('active');
+    }
+
+    // Reset all counters
+    function resetAllCounters() {
+        if (!confirm('Reset all counters to initial values? This will start a new round.')) {
+            return;
+        }
+        
+        POINTS_TIERS.forEach(points => {
+            TRACKS.forEach(track => {
+                const initialValue = getInitialValue(points, track);
+                saveValue(points, track, initialValue);
+            });
+        });
+        
+        // Reload page to refresh all UI
+        location.reload();
+    }
+
+    // Initialize matrix
+    function initializeMatrix() {
+        const grid = document.getElementById('matrixGrid');
+        
+        POINTS_TIERS.forEach((points, rowIndex) => {
             const time = TIME_TIERS[rowIndex];
             const multiplier = MULTIPLIERS[rowIndex];
             
-            document.getElementById('overlayTrack').textContent = track;
-            document.getElementById('overlayDetails').textContent = `${track} play triggered!`;
-            document.getElementById('overlayPoints').innerHTML = 
-                `${points} pts <span class="overlay-multiplier">× ${multiplier}</span> · ${time}s`;
-            document.getElementById('overlayRemaining').textContent = remaining;
+            // Points label
+            const pointsLabel = document.createElement('div');
+            pointsLabel.className = 'matrix-label';
+            pointsLabel.innerHTML = `${points} <div class="multiplier">× ${multiplier}</div>`;
+            grid.appendChild(pointsLabel);
             
-            overlay.classList.add('active');
-            playBeep();
+            // Time label
+            const timeLabel = document.createElement('div');
+            timeLabel.className = 'matrix-label';
+            timeLabel.textContent = `${time}s`;
+            grid.appendChild(timeLabel);
             
-            // Focus trap
-            const closeBtn = document.getElementById('overlayClose');
-            closeBtn.focus();
-        }
-
-        // Hide overlay
-        function hideOverlay() {
-            document.getElementById('overlay').classList.remove('active');
-        }
-
-        // Reset all counters
-        function resetAllCounters() {
-            if (!confirm('Reset all counters to initial values? This will start a new round.')) {
-                return;
-            }
-            
-            POINTS_TIERS.forEach(points => {
-                TRACKS.forEach(track => {
-                    const initialValue = getInitialValue(points, track);
-                    saveValue(points, track, initialValue);
+            // Counter cells
+            TRACKS.forEach(track => {
+                const currentValue = readValue(points, track);
+                
+                const cell = document.createElement('div');
+                cell.className = 'counter-cell';
+                cell.setAttribute('role', 'button');
+                cell.setAttribute('tabindex', '0');
+                
+                if (currentValue === 0) {
+                    cell.classList.add('disabled');
+                    cell.setAttribute('aria-disabled', 'true');
+                }
+                cell.setAttribute('aria-label', 
+                    `${track} — ${points} points × ${multiplier} — ${currentValue} remaining`);
+                
+                const mainArea = document.createElement('div');
+                mainArea.className = 'counter-main';
+                
+                const trackName = document.createElement('div');
+                trackName.className = 'counter-track-name';
+                trackName.textContent = track;
+                
+                const pointsDisplay = document.createElement('div');
+                pointsDisplay.className = 'counter-points';
+                pointsDisplay.innerHTML = `${points} <span class="multiplier">× ${multiplier}</span>`;
+                
+                const value = document.createElement('div');
+                value.className = 'counter-value';
+                value.textContent = currentValue;
+                
+                const remaining = document.createElement('div');
+                remaining.className = 'counter-remaining';
+                remaining.textContent = 'remaining';
+                
+                mainArea.appendChild(trackName);
+                mainArea.appendChild(pointsDisplay);
+                mainArea.appendChild(value);
+                mainArea.appendChild(remaining);
+                
+                const plusBtn = document.createElement('button');
+                plusBtn.className = 'plus-btn';
+                plusBtn.textContent = '+';
+                plusBtn.setAttribute('aria-label', `Increment ${track} counter`);
+                plusBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    incrementCounter(points, track, cell);
                 });
-            });
-            
-            // Reload page to refresh all UI
-            location.reload();
-        }
-
-        // Initialize matrix
-        function initializeMatrix() {
-            const grid = document.getElementById('matrixGrid');
-            
-            POINTS_TIERS.forEach((points, rowIndex) => {
-                const time = TIME_TIERS[rowIndex];
-                const multiplier = MULTIPLIERS[rowIndex];
                 
-                // Points label
-                const pointsLabel = document.createElement('div');
-                pointsLabel.className = 'matrix-label';
-                pointsLabel.innerHTML = `${points} pts<div class="multiplier">× ${multiplier}</div>`;
-                grid.appendChild(pointsLabel);
+                cell.appendChild(mainArea);
+                cell.appendChild(plusBtn);
                 
-                // Time label
-                const timeLabel = document.createElement('div');
-                timeLabel.className = 'matrix-label';
-                timeLabel.textContent = `${time}s`;
-                grid.appendChild(timeLabel);
-                
-                // Counter cells
-                TRACKS.forEach(track => {
-                    const currentValue = readValue(points, track);
-                    
-                    const cell = document.createElement('div');
-                    cell.className = 'counter-cell';
-                    cell.setAttribute('role', 'button');
-                    cell.setAttribute('tabindex', '0');
-                    
-                    if (currentValue === 0) {
-                        cell.classList.add('disabled');
-                        cell.setAttribute('aria-disabled', 'true');
+                // Main area click
+                cell.addEventListener('click', (e) => {
+                    if (e.target === plusBtn || e.target.closest('.plus-btn')) {
+                        return;
                     }
-                    cell.setAttribute('aria-label', 
-                        `${track} — ${points} points × ${multiplier} — ${currentValue} remaining`);
-                    
-                    const mainArea = document.createElement('div');
-                    mainArea.className = 'counter-main';
-                    
-                    const trackName = document.createElement('div');
-                    trackName.className = 'counter-track-name';
-                    trackName.textContent = track;
-                    
-                    const pointsDisplay = document.createElement('div');
-                    pointsDisplay.className = 'counter-points';
-                    pointsDisplay.innerHTML = `${points} pts <span class="multiplier">× ${multiplier}</span>`;
-                    
-                    const value = document.createElement('div');
-                    value.className = 'counter-value';
-                    value.textContent = currentValue;
-                    
-                    const remaining = document.createElement('div');
-                    remaining.className = 'counter-remaining';
-                    remaining.textContent = 'remaining';
-                    
-                    mainArea.appendChild(trackName);
-                    mainArea.appendChild(pointsDisplay);
-                    mainArea.appendChild(value);
-                    mainArea.appendChild(remaining);
-                    
-                    const plusBtn = document.createElement('button');
-                    plusBtn.className = 'plus-btn';
-                    plusBtn.textContent = '+';
-                    plusBtn.setAttribute('aria-label', `Increment ${track} counter`);
-                    plusBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        incrementCounter(points, track, cell);
-                    });
-                    
-                    cell.appendChild(mainArea);
-                    cell.appendChild(plusBtn);
-                    
-                    // Main area click
-                    cell.addEventListener('click', (e) => {
-                        if (e.target === plusBtn || e.target.closest('.plus-btn')) {
-                            return;
-                        }
-                        if (!cell.classList.contains('disabled')) {
-                            decrementCounter(points, track, cell);
-                        }
-                    });
-                    
-                    // Keyboard
-                    cell.addEventListener('keydown', (e) => {
-                        if ((e.key === 'Enter' || e.key === ' ') && 
-                            !cell.classList.contains('disabled')) {
-                            e.preventDefault();
-                            decrementCounter(points, track, cell);
-                        }
-                    });
-                    
-                    grid.appendChild(cell);
-                });
-            });
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeMatrix();
-            
-            document.getElementById('overlayClose').addEventListener('click', hideOverlay);
-            document.getElementById('overlay').addEventListener('click', (e) => {
-                if (e.target.id === 'overlay') {
-                    hideOverlay();
-                }
-            });
-            
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && document.getElementById('overlay').classList.contains('active')) {
-                    hideOverlay();
-                }
-            });
-            
-            document.getElementById('resetBtn').addEventListener('click', resetAllCounters);
-
-            // BGM CONTROL LOGIC
-            const bgmAudio = document.getElementById('bgmAudio');
-            const bgmToggle = document.getElementById('bgmToggle');
-            let bgmPlaying = false;
-
-            if (bgmAudio && bgmToggle) {
-                bgmToggle.addEventListener('click', async () => {
-                    try {
-                        if (!bgmPlaying) {
-                            await bgmAudio.play();
-                            bgmPlaying = true;
-                            bgmToggle.textContent = 'PAUSE THE UPSIDE DOWN';
-                        } else {
-                            bgmAudio.pause();
-                            bgmPlaying = false;
-                            bgmToggle.textContent = 'PLAY THE UPSIDE DOWN';
-                        }
-                    } catch (err) {
-                        console.log('Audio play was blocked by the browser', err);
+                    if (!cell.classList.contains('disabled')) {
+                        decrementCounter(points, track, cell);
                     }
                 });
+                
+                // Keyboard
+                cell.addEventListener('keydown', (e) => {
+                    if ((e.key === 'Enter' || e.key === ' ') && 
+                        !cell.classList.contains('disabled')) {
+                        e.preventDefault();
+                        decrementCounter(points, track, cell);
+                    }
+                });
+                
+                grid.appendChild(cell);
+            });
+        });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeMatrix();
+        
+        document.getElementById('overlayClose').addEventListener('click', hideOverlay);
+        document.getElementById('overlay').addEventListener('click', (e) => {
+            if (e.target.id === 'overlay') {
+                hideOverlay();
             }
         });
-    </script>
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('overlay').classList.contains('active')) {
+                hideOverlay();
+            }
+        });
+        
+        document.getElementById('resetBtn').addEventListener('click', resetAllCounters);
+
+        // BGM CONTROL LOGIC
+        const bgmAudio = document.getElementById('bgmAudio');
+        const bgmToggle = document.getElementById('bgmToggle');
+        let bgmPlaying = false;
+
+        if (bgmAudio && bgmToggle) {
+            bgmToggle.addEventListener('click', async () => {
+                try {
+                    if (!bgmPlaying) {
+                        await bgmAudio.play();
+                        bgmPlaying = true;
+                        bgmToggle.textContent = 'PAUSE THE UPSIDE DOWN';
+                    } else {
+                        bgmAudio.pause();
+                        bgmPlaying = false;
+                        bgmToggle.textContent = 'PLAY THE UPSIDE DOWN';
+                    }
+                } catch (err) {
+                    console.log('Audio play was blocked by the browser', err);
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>
